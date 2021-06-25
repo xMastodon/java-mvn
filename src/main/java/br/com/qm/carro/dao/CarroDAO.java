@@ -9,23 +9,22 @@ import java.util.List;
 import br.com.qm.carro.pojo.Carro;
 import org.postgresql.core.ConnectionFactory;
 
-
 public class CarroDAO
 {	
 	private Connection conn;
-
+	
 	public CarroDAO()
 	{
 		this.conn = new ConnectionFactory().getConnection();
 	}
 	
 	public boolean insereCarro(Carro carro)
-	{
-		
+	{		
 		String sql = "INSERT INTO carros.carro"
 				+ "	(placa, cor, marca, modelo)"
 				+ "	VALUES (?, ?, ?, ?)";		
-		try {
+		try
+		{
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, carro.getPlaca());
 			stmt.setString(2, carro.getCor());
@@ -42,8 +41,7 @@ public class CarroDAO
 			return false;
 		}		
 		return true;
-	}
-	
+	}	
 	public boolean removeCarro(String placa)
 	{
 		
@@ -62,74 +60,52 @@ public class CarroDAO
 		{
 			System.err.println("Erro ao remover um carro!");
 			System.err.println(e.getMessage());
-		}
-		
-		
+		}		
 		return qtdLinhas > 0;
-	}
-	
+	}	
 	public Carro consultaCarro(String placa)
-	{
-		
+	{		
 		String sql = "select * from carros.carro where placa = ?";
-		try {
+		try
+		{
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, placa);
-			
-			ResultSet rs = stmt.executeQuery();
-			
+			stmt.setString(1, placa);			
+			ResultSet rs = stmt.executeQuery();			
 			if (rs.next())
-			{
-				
-				Carro carro = new Carro();
-				
+			{				
+				Carro carro = new Carro();				
 				carro.setPlaca(rs.getString("placa"));
 				carro.setCor(rs.getString("cor"));
 				carro.setMarca(rs.getString("marca"));
-				carro.setModelo(rs.getString("modelo"));
-				
-				
+				carro.setModelo(rs.getString("modelo"));				
 				stmt.close();
 				return carro;
 			}
-			
-			
-			
 		}
 		catch (SQLException e)
 		{
 			System.err.println("Erro ao consultar um carro!");
 			System.err.println(e.getMessage());
-		}
-		
-		
-		
+		}	
 		return null;
-	}
-	
+	}	
 	public List<Carro> listarCarros()
-	{
-		
+	{		
 		List<Carro> carros = new ArrayList<Carro>();
-		String sql = "select * from carros.carro";
-		
+		String sql = "select * from carros.carro";		
 		try
 		{
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			ResultSet rs = stmt.executeQuery();
-			
+			ResultSet rs = stmt.executeQuery();			
 			while (rs.next())
 			{
-				Carro carro = new Carro();
-				
+				Carro carro = new Carro();				
 				carro.setPlaca(rs.getString("placa"));
 				carro.setCor(rs.getString("cor"));
 				carro.setMarca(rs.getString("marca"));
-				carro.setModelo(rs.getString("modelo"));
-				
+				carro.setModelo(rs.getString("modelo"));				
 				carros.add(carro);
-			}
-			
+			}			
 			stmt.close();
 		} catch (SQLException e)
 		{
